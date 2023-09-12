@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "com.unity.2d.sprite": "4.0.2",
+    "com.unity.2d.tilemap": "4.0.5",
+    "com.unity.2d.common": "1.0.0",
+    "com.unity.2d.animation": "4.0.0",
+    "com.unity.2d.psdimporter": "4.0.0"
+  }
+}

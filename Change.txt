@@ -1,0 +1,5 @@
+2023 / 08 / 23
+Sprites / Animation 폴더를 Texture >> Enemy 폴더로 이동
+하트 hp 에셋 추가
+플레이어 hp 관련 스크립트 추가
+	피격시 튕겨나는 모션 구현
