@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
-    public float playerSpeed = 0.5f;
     Rigidbody2D Player2D;
     Player player = Player.GetInstance();
     SpriteRenderer rendering;
     Animator anime;
     public Vector3 position = new Vector3(0, 0,0 );
+    public Vector3 arrow;     
 
     private void Start()
     {
@@ -20,37 +20,27 @@ public class PlayerMove : MonoBehaviour
     }
     private void Update()
     {
-        PlayerMoving();
-        if (Input.GetKey(KeyCode.Space))
-        {
-            anime.SetInteger("walk", 0);
-        }
+
     }
     void PlayerMoving()
     {
         Vector3 moveVelocity = Vector3.zero;
         if (Input.GetAxisRaw("Horizontal") < 0)
         {
-            moveVelocity = Vector3.right;
-            rendering.flipX = true;
+            arrow = Vector3.left;
         }
         else if (Input.GetAxisRaw("Horizontal") > 0)
         {
-            moveVelocity = Vector3.right;
-            rendering.flipX = false;
-        }
-            if (Input.GetKey(KeyCode.RightArrow))
+            arrow = Vector3.right;
+        }if (arrow == Vector3.left)
         {
-            Player2D.AddForce(new Vector2(playerSpeed, 0), ForceMode2D.Force);
-            anime.SetInteger("walk", 2);
-
+            transform.position = transform.position + arrow * 1 * Time.deltaTime;
         }
-        if (Input.GetKey(KeyCode.LeftArrow))
+        else
         {
-            Player2D.AddForce(new Vector2(-playerSpeed, 0), ForceMode2D.Force);
-            anime.SetInteger("walk", 2);
+                transform.position = transform.position + arrow * -1 * Time.deltaTime;
         }
 
 
-    }
+        }
 }
