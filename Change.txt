@@ -12,3 +12,4 @@ Sprites / Animation 폴더를 Texture >> Enemy 폴더로 이동
 enmey 타일맵 사라진거 다시 tile palette로 그림
 enemy 체력바 삭제
 enemy hp 삭제	
+\2D_Project\Assets\Texture\Character\Mob에서 War파일 삭제
