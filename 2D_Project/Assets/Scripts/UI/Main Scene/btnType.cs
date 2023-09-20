@@ -15,10 +15,9 @@ public enum BTNTYPE
 
 public class btnType : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    
-    public BTNTYPE      currentType;
-    public Transform    buttonScale;
-    Vector3             defaultScale;
+    public BTNTYPE          currentType;
+    public Transform        buttonScale;
+    Vector3                 defaultScale;
 
     private void Start()
     {
