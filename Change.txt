@@ -3,3 +3,13 @@ Sprites / Animation 폴더를 Texture >> Enemy 폴더로 이동
 하트 hp 에셋 추가
 플레이어 hp 관련 스크립트 추가
 	피격시 튕겨나는 모션 구현
+
+2023/09/17
+	메인화면 틀 구현
+	미구현 목록 : 메인화면 작동 전반
+
+2023 / 09 / 18
+enmey 타일맵 사라진거 다시 tile palette로 그림
+enemy 체력바 삭제
+enemy hp 삭제	
+\2D_Project\Assets\Texture\Character\Mob에서 War파일 삭제
