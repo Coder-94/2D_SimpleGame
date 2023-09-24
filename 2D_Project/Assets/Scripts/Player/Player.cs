@@ -4,29 +4,15 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    private static Player instance;
-    private void Awake()
+    // Start is called before the first frame update
+    void Start()
     {
-        if(null == instance)
-        {
-            instance = this;
-
-            DontDestroyOnLoad(this.gameObject);
-        }
-        else
-        {
-            Destroy(this.gameObject);
-        }
+        
     }
-    public static Player GetInstance()
+
+    // Update is called once per frame
+    void Update()
     {
-        if(instance == null)
-        {
-            instance = new Player();
-        }
-        return instance;
+        
     }
-   }
-
-
-
+}
