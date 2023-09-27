@@ -3,16 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public enum BTNTYPE
-{
-    Start,
-    Help,
-    Option,
-    Sound,
-    Back,
-    Quit
-}
-
 public class btnType : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public BTNTYPE          currentType;
@@ -32,6 +22,10 @@ public class btnType : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             case BTNTYPE.Help:
                 break;
             case BTNTYPE.Option:
+                break;
+            case BTNTYPE.Yes:
+                break;
+            case BTNTYPE.No:
                 break;
             case BTNTYPE.Sound:
                 break;
