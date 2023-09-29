@@ -9,6 +9,34 @@ public class Enemy : MonoBehaviour
     SpriteRenderer spriteRenderer;
     public int nextMove;
 
+    public string enemyName;
+    public int maxHp;
+    public int nowHp;
+    public int atkDmg;
+    public float atkSpeed;
+    public float moveSpeed;
+    public float atkRange;
+    public float fieldOfVision;
+    public TemporaryFile player;
+
+    public Transform target;
+    float attackDelay;
+    Enemy enemy;
+    Animator enemyAnimator;
+
+    private void SetEnemyStatus(string _enemyName, int _maxHP, int _atkDmg, int _atkSpeed, 
+       float _moveSpeed, float _atkRange, float _fieldOfVision)
+    {
+        enemyName = _enemyName;
+        maxHp = _maxHP;
+        nowHp = _maxHP;
+        atkDmg = _atkDmg;
+        atkSpeed = _atkSpeed;
+        moveSpeed = _moveSpeed;
+        atkRange = _atkRange;
+        fieldOfVision = _fieldOfVision;
+    }
+
     void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
@@ -57,6 +85,84 @@ public class Enemy : MonoBehaviour
         CancelInvoke();
         Invoke("Think", 5);
     }
+    void Die()
+    {
+        enemyAnimator.SetTrigger("die");           
+        GetComponent<Enemy>().enabled = false;    
+        GetComponent<Collider2D>().enabled = false; 
+        Destroy(GetComponent<Rigidbody2D>());  
+        Destroy(gameObject, 3);                   
+    }
 
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+        if(col.CompareTag("Player"))
+        {
+            if(player.attacked)
+            {
+                nowHp -= player.atkDmg;
+                player.attacked = false;
+                if(nowHp<=0)
+                {
+                    Die();
+                }
+            }
+        }
+    }
 
+    void Update()
+    {
+        attackDelay -= Time.deltaTime;
+        if (attackDelay < 0) attackDelay = 0;
+
+        float distance = Vector3.Distance(transform.position, target.position);
+
+        if (attackDelay == 0 && distance <= enemy.fieldOfVision)
+        {
+            FaceTarget();
+
+            if (distance <= enemy.atkRange)
+            {
+                AttackTarget();
+            }
+            else
+            {
+                if (!enemyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+                {
+                    MoveToTarget();
+                }
+            }
+        }
+        else
+        {
+            enemyAnimator.SetBool("moving", false);
+        }
+    }
+
+    void MoveToTarget()
+    {
+        float dir = target.position.x - transform.position.x;
+        dir = (dir < 0) ? -1 : 1;
+        transform.Translate(new Vector2(dir, 0) * enemy.moveSpeed * Time.deltaTime);
+        enemyAnimator.SetBool("moving", true);
+    }
+
+    void FaceTarget()
+    {
+        if (target.position.x - transform.position.x < 0) // 타겟이 왼쪽에 있을 때
+        {
+            transform.localScale = new Vector3(-1, 1, 1);
+        }
+        else // 타겟이 오른쪽에 있을 때
+        {
+            transform.localScale = new Vector3(1, 1, 1);
+        }
+    }
+
+    void AttackTarget()
+    {
+        target.GetComponent<TemporaryFile>().nowHp -= enemy.atkDmg;
+        enemyAnimator.SetTrigger("attack"); 
+        attackDelay = enemy.atkSpeed; 
+    }
 }
