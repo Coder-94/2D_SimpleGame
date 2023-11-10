@@ -13,3 +13,11 @@ enmey 타일맵 사라진거 다시 tile palette로 그림
 enemy 체력바 삭제
 enemy hp 삭제	
 \2D_Project\Assets\Texture\Character\Mob에서 War파일 삭제
+
+2023 / 09 / 29
+-sprites > mob > coins 랑 hpbar폴더 삭제
+-scripts> enemy > TemporaryFile 적 공격 구현할때 잘 작동되는지 확인하려고
+만든 player 스크립트 (나중에 삭제할 예정)
+-적 Die & 공격범위,시야범위 ai 스크립트 작성 ( enemy die랑 attack 그래픽없어서 animator구현 안함,
+그래픽 생기면 구현할 예정)
+ (+ https://hoil2.tistory.com/32 이블로그 참고했음)
