@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 319143403}
   - component: {fileID: 319143402}
   - component: {fileID: 319143401}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -405,6 +405,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 1
   BeforePo: {x: 0, y: 0, z: 0}
+  isGrounded: 0
+  Ground:
+    serializedVersion: 2
+    m_Bits: 8
+  jumpForce: 5
+  isJumped: 0
 --- !u!114 &871677189
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -588,6 +594,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 1
   BeforePo: {x: 0, y: 0, z: 0}
+  isGrounded: 0
+  Ground:
+    serializedVersion: 2
+    m_Bits: 0
+  jumpForce: 5
+  isJumped: 0
 --- !u!114 &1552287684
 MonoBehaviour:
   m_ObjectHideFlags: 0
