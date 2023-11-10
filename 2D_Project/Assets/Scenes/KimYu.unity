@@ -227,7 +227,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 319143400}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: -3.8436, z: 1}
+  m_LocalPosition: {x: -0, y: -5, z: 0}
   m_LocalScale: {x: 17.813068, y: 2.3327599, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -302,7 +302,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 4
+  m_Constraints: 0
 --- !u!212 &871677185
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -362,8 +362,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 871677182}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -403,12 +403,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11a0c774ead2efc42a639cb10832db09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 1
-  BeforePo: {x: 0, y: 0, z: 0}
-  isGrounded: 0
   Ground:
     serializedVersion: 2
     m_Bits: 8
+  isGrounded: 0
+  moveSpeed: 1
+  BeforePo: {x: 0, y: 0, z: 0}
   jumpForce: 5
   isJumped: 0
 --- !u!114 &871677189
@@ -592,12 +592,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11a0c774ead2efc42a639cb10832db09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 1
-  BeforePo: {x: 0, y: 0, z: 0}
-  isGrounded: 0
   Ground:
     serializedVersion: 2
     m_Bits: 0
+  isGrounded: 0
+  moveSpeed: 1
+  BeforePo: {x: 0, y: 0, z: 0}
   jumpForce: 5
   isJumped: 0
 --- !u!114 &1552287684
