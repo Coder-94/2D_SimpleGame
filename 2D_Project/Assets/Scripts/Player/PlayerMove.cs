@@ -25,7 +25,13 @@ public class PlayerMove : MonoBehaviour
     }
     private void Update()
     {
-        isGrounded = Physics2D.Raycast(transform.position, Vector2.down, 0.5f, Ground);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 0.5f, Ground);
+        isGrounded = (hit.collider != null);
+        if (isGrounded && isJumped)
+        {
+            animator.SetTrigger("Jump");
+            isJumped = false;
+        }
         BeforePo = transform.position;
         Move();
         Jump();
@@ -33,16 +39,6 @@ public class PlayerMove : MonoBehaviour
         if (transform.position == BeforePo)
         {
             animator.SetInteger("walk", 0);
-        }
-        if (isGrounded)
-        {
-            if (isJumped)
-            {
-                animator.SetTrigger("Jump");
-            }
-            isJumped = false;
-
-
         }
 
     }
