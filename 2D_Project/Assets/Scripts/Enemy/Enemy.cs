@@ -5,7 +5,7 @@ public class Enemy : MonoBehaviour
 {
 
     Rigidbody2D rigid;
-    Animator anim;
+    Animator enemyAnimator;
     SpriteRenderer spriteRenderer;
     public int nextMove;
 
@@ -17,12 +17,12 @@ public class Enemy : MonoBehaviour
     public float moveSpeed;
     public float atkRange;
     public float fieldOfVision;
+
     public TemporaryFile player;
 
     public Transform target;
     float attackDelay;
     Enemy enemy;
-    Animator enemyAnimator;
 
     private void SetEnemyStatus(string _enemyName, int _maxHP, int _atkDmg, int _atkSpeed, 
        float _moveSpeed, float _atkRange, float _fieldOfVision)
@@ -40,7 +40,7 @@ public class Enemy : MonoBehaviour
     void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animator>();
+        enemyAnimator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         Invoke("Think", 5);
@@ -65,7 +65,7 @@ public class Enemy : MonoBehaviour
     {
         nextMove = Random.Range(-1, 2);
 
-        anim.SetInteger("WalkSpeed", nextMove);
+        enemyAnimator.SetInteger("WalkSpeed", nextMove);
 
         if (nextMove != 0)
         {
@@ -127,7 +127,7 @@ public class Enemy : MonoBehaviour
             }
             else
             {
-                if (!enemyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+                if (!enemyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Attack")) //attack animator¾øÀ½
                 {
                     MoveToTarget();
                 }
@@ -135,7 +135,7 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            enemyAnimator.SetBool("moving", false);
+            enemyAnimator.SetInteger("WalkSpeed", 0);
         }
     }
 
@@ -144,7 +144,7 @@ public class Enemy : MonoBehaviour
         float dir = target.position.x - transform.position.x;
         dir = (dir < 0) ? -1 : 1;
         transform.Translate(new Vector2(dir, 0) * enemy.moveSpeed * Time.deltaTime);
-        enemyAnimator.SetBool("moving", true);
+        enemyAnimator.SetInteger("WalkSpeed", 0);
     }
 
     void FaceTarget()
