@@ -17,7 +17,7 @@ public class Enemy : MonoBehaviour
     public float moveSpeed;
     public float atkRange;
     public float fieldOfVision;
-    public TemporaryFile player;
+    public TemporaryFile player; //플레이어 임시 스크립트 (나중에 삭제할 예정)
 
     public Transform target;
     float attackDelay;
@@ -85,14 +85,14 @@ public class Enemy : MonoBehaviour
         CancelInvoke();
         Invoke("Think", 5);
     }
-    void Die()
+    /*void Die()
     {
         enemyAnimator.SetTrigger("die");           
         GetComponent<Enemy>().enabled = false;    
         GetComponent<Collider2D>().enabled = false; 
         Destroy(GetComponent<Rigidbody2D>());  
         Destroy(gameObject, 3);                   
-    }
+    }*/
 
     private void OnTriggerEnter2D(Collider2D col)
     {
@@ -102,9 +102,9 @@ public class Enemy : MonoBehaviour
             {
                 nowHp -= player.atkDmg;
                 player.attacked = false;
-                if(nowHp<=0)
+                if(nowHp<=0) //적 사망
                 {
-                    Die();
+                    Destroy(gameObject);
                 }
             }
         }
@@ -112,15 +112,17 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        attackDelay -= Time.deltaTime;
+        attackDelay -= Time.deltaTime; //time.deltaTIme: 1프레임당 걸리는 시간
         if (attackDelay < 0) attackDelay = 0;
 
         float distance = Vector3.Distance(transform.position, target.position);
 
+        // 공격 딜레이가 0일때, 시야 범위 안에 들어올 때
         if (attackDelay == 0 && distance <= enemy.fieldOfVision)
         {
             FaceTarget();
 
+            // 공격 범위 안에 들어오면 공격
             if (distance <= enemy.atkRange)
             {
                 AttackTarget();
@@ -135,7 +137,7 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            enemyAnimator.SetBool("moving", false);
+            anim.SetInteger("WalkSpeed", nextMove);
         }
     }
 
@@ -165,4 +167,5 @@ public class Enemy : MonoBehaviour
         enemyAnimator.SetTrigger("attack"); 
         attackDelay = enemy.atkSpeed; 
     }
+   
 }
