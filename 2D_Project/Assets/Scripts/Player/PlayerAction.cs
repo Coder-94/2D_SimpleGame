@@ -18,10 +18,16 @@ public class PlayerAction : MonoBehaviour
     public float moveSpeed = 5f;
     //Crouch 인자
     public bool isCrouch = false;
+    //Attack 인자
+    public GameObject aObject;
+    public bool isAttack = false;
+    public float AttackTime = 0f;
+    public Vector3 movePosisiton;
     private void OnEnable()
     {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
+        
     }
     private void Update()
     {
@@ -33,6 +39,17 @@ public class PlayerAction : MonoBehaviour
         Crouch();
         Move();
         Jump();
+        Attack();
+        if(isAttack == true)
+        {
+            AttackTime += Time.deltaTime;
+        }
+        if (AttackTime >= 0.6f)
+        {
+            isAttack = false;
+            animator.SetBool("Attack", false);
+            AttackTime = 0f;
+        }
 
 
     }
@@ -76,7 +93,7 @@ public class PlayerAction : MonoBehaviour
     private void Move()
     {
         Vector3 movePosisiton = Vector3.zero;
-        if (isCrouch == false)
+        if (isCrouch == false && isAttack == false)
         {
             if (Input.GetAxisRaw("Horizontal") < 0)
             {
@@ -142,5 +159,15 @@ public class PlayerAction : MonoBehaviour
             }
         }
 
+    }
+    private void Attack()
+    {
+        if (isGround)
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                animator.SetBool("Attack", true);
+                Instantiate(aObject, this.gameObject.transform);
+                isAttack = true;
+            }
     }
 }
