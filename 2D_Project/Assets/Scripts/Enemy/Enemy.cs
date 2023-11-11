@@ -17,6 +17,7 @@ public class Enemy : MonoBehaviour
     public float moveSpeed;
     public float atkRange;
     public float fieldOfVision;
+
     public TemporaryFile player;
 
     public Transform target;
