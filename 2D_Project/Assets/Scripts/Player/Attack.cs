@@ -5,45 +5,39 @@ using UnityEngine;
 public class Attack : MonoBehaviour
 {
     //공격
-    public float attackPower = 5f;
-    public Rigidbody2D AttackO;
-    public GameObject Player1;
-    public float attackTime = 0f;
-    public Vector3 movePosisiton;
+    public float AttackSpeed = 3f;
+    //공격 방향
+    public Vector3 Direction;
+    Rigidbody2D rb;
 
     private void Start()
     {
-
-        AttackO = gameObject.GetComponent<Rigidbody2D>();
-        
-        if(PlayerMove.movePosisiton == Vector3.right)
+        if (PlayerAction.AttackPosistion == Vector3.right)
         {
-            movePosisiton = Vector3.right;
+            Direction = Vector3.right;
         }
         else
         {
-            movePosisiton = Vector3.left;
+            Direction = Vector3.left;
         }
     }
     private void OnEnable()
     {
-        transform.position = Player1.transform.position;
+
     }
     // Update is called once per frame
     void Update()
     {
-        Move();
+        this.transform.Translate(Direction * this.AttackSpeed * Time.deltaTime);
     }
-    private void OnCollisionEnter(Collision collision)
+
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        Destroy(this.gameObject);
-    }
-    public void Move()
-    {
-        if (attackTime >= 5)
+        var obj = collision.gameObject;
+        if (obj.CompareTag("Enemy"))
         {
+            Debug.Log("Attack");
             Destroy(this.gameObject);
         }
-        AttackO.AddForce(movePosisiton * attackPower);
-        attackTime += Time.deltaTime;
     }
+}

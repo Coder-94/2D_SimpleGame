@@ -44,10 +44,6 @@ public class PlayerMove : MonoBehaviour
         }
 
     }
-    private void FixedUpdate()
-    {
-
-    }
     void Move()
     {
         movePosisiton = Vector3.zero;

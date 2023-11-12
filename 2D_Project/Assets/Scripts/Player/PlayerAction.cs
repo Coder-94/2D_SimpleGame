@@ -22,7 +22,9 @@ public class PlayerAction : MonoBehaviour
     public GameObject aObject;
     public bool isAttack = false;
     public float AttackTime = 0f;
+    public static Vector3 AttackPosistion = Vector3.right;
     public Vector3 movePosisiton;
+
     private void OnEnable()
     {
         animator = GetComponent<Animator>();
@@ -53,14 +55,6 @@ public class PlayerAction : MonoBehaviour
 
 
     }
-    private void FixedUpdate()
-    {
-
-
-
-
-    }
-
     private void OnCollisionStay2D(Collision2D collision)
     {
         var obj = collision.gameObject;
@@ -92,12 +86,14 @@ public class PlayerAction : MonoBehaviour
     }
     private void Move()
     {
-        Vector3 movePosisiton = Vector3.zero;
+        movePosisiton = Vector3.zero;
+
         if (isCrouch == false && isAttack == false)
         {
             if (Input.GetAxisRaw("Horizontal") < 0)
             {
                 movePosisiton = Vector3.left;
+                AttackPosistion = Vector3.left;
                 transform.localScale = new Vector3(-1, 1, 1);
                 if (isGround)
                 {
@@ -112,6 +108,7 @@ public class PlayerAction : MonoBehaviour
             else if (Input.GetAxisRaw("Horizontal") > 0)
             {
                 movePosisiton = Vector3.right;
+                AttackPosistion = Vector3.right;
                 transform.localScale = new Vector3(1, 1, 1);
                 if (isGround)
                 {
@@ -163,11 +160,13 @@ public class PlayerAction : MonoBehaviour
     private void Attack()
     {
         if (isGround)
-            if (Input.GetKeyDown(KeyCode.X))
+            if (Input.GetKeyDown(KeyCode.X) && AttackTime == 0f)
             {
                 animator.SetBool("Attack", true);
-                Instantiate(aObject, this.gameObject.transform);
+                var bulletGo = Instantiate<GameObject>(this.aObject);
+                bulletGo.transform.position = this.transform.position;
                 isAttack = true;
+
             }
     }
 }
