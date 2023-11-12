@@ -7,6 +7,7 @@ public class PlayerAction : MonoBehaviour
     //기본 사항
     private Animator animator;
     private Rigidbody2D rb;
+    public GameObject Player;
     //땅에 닿는지 확인하는 인수
     public bool isGround = false;
     //기존 위치 확인 인수
@@ -42,19 +43,23 @@ public class PlayerAction : MonoBehaviour
         Move();
         Jump();
         Attack();
-        if(isAttack == true)
+        if (isAttack == true)
         {
             AttackTime += Time.deltaTime;
+            if (Player.name == "Archer")
+            {
+                if (AttackTime >= 1f)
+                {
+                    isAttack = false;
+                    animator.SetBool("Attack", false);
+                    AttackTime = 0f;
+                }
+            }
         }
-        if (AttackTime >= 0.6f)
-        {
-            isAttack = false;
-            animator.SetBool("Attack", false);
-            AttackTime = 0f;
-        }
+     }
 
 
-    }
+
     private void OnCollisionStay2D(Collision2D collision)
     {
         var obj = collision.gameObject;
@@ -166,7 +171,6 @@ public class PlayerAction : MonoBehaviour
                 var bulletGo = Instantiate<GameObject>(this.aObject);
                 bulletGo.transform.position = this.transform.position;
                 isAttack = true;
-
             }
     }
 }
