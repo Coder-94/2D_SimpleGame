@@ -16,6 +16,7 @@ public class Enemy : MonoBehaviour
     public float atkSpeed;
     public float moveSpeed;
     public float atkRange;
+
     public float fieldOfVision;
 
     public TemporaryFile player;
@@ -24,7 +25,7 @@ public class Enemy : MonoBehaviour
     float attackDelay;
     Enemy enemy;
 
-    private void SetEnemyStatus(string _enemyName, int _maxHP, int _atkDmg, int _atkSpeed, 
+    private void SetEnemyStatus(string _enemyName, int _maxHP, int _atkDmg, float _atkSpeed, 
        float _moveSpeed, float _atkRange, float _fieldOfVision)
     {
         enemyName = _enemyName;
@@ -37,13 +38,27 @@ public class Enemy : MonoBehaviour
         fieldOfVision = _fieldOfVision;
     }
 
+    private void Start()
+    {
+        if(name.Equals("Enemy"))
+        {
+            SetEnemyStatus("Enemy", 100, 10, 1.5f, 2, 1.5f, 7f);
+        }
+
+        target = GameObject.FindWithTag("Archer").transform;
+        SetAttackSpeed(atkSpeed);
+
+        InvokeRepeating("Think", 5, 3);
+    }
+
     void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
+        enemy = GetComponent<Enemy>();
         enemyAnimator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        Invoke("Think", 5);
+        CancelInvoke();
     }
 
     void FixedUpdate()
@@ -127,7 +142,7 @@ public class Enemy : MonoBehaviour
             }
             else
             {
-                if (!enemyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Attack")) //attack animator없음
+                if (!enemyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Attack")) 
                 {
                     MoveToTarget();
                 }
@@ -136,19 +151,16 @@ public class Enemy : MonoBehaviour
         else
         {
             enemyAnimator.SetInteger("WalkSpeed", 0);
-        }
-    }
 
-    void MoveToTarget()
-    {
-        float dir = target.position.x - transform.position.x;
-        dir = (dir < 0) ? -1 : 1;
-        transform.Translate(new Vector2(dir, 0) * enemy.moveSpeed * Time.deltaTime);
-        enemyAnimator.SetInteger("WalkSpeed", 0);
+        }
     }
 
     void FaceTarget()
     {
+        Vector3 targetDirection = target.position - transform.position;
+
+        spriteRenderer.flipX = (targetDirection.x < 0);
+
         if (target.position.x - transform.position.x < 0) // 타겟이 왼쪽에 있을 때
         {
             transform.localScale = new Vector3(-1, 1, 1);
@@ -159,10 +171,32 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    void MoveToTarget()
+    {
+        float dir = target.position.x - transform.position.x;
+        dir = (dir < 0) ? -1 : 1;
+
+        if (target.position.x - transform.position.x < 0)
+        {
+            spriteRenderer.flipX = (dir < 0);
+        } else
+        {
+            spriteRenderer.flipX = (dir == 1);
+        }
+
+        transform.Translate(new Vector2(dir, 0) * enemy.moveSpeed * Time.deltaTime);
+        enemyAnimator.SetInteger("WalkSpeed", (int)dir);
+    }
+
     void AttackTarget()
     {
-        target.GetComponent<TemporaryFile>().nowHp -= enemy.atkDmg;
+        //target.GetComponent<TemporaryFile>().nowHp -= enemy.atkDmg;
         enemyAnimator.SetTrigger("attack"); 
         attackDelay = enemy.atkSpeed; 
+    }
+
+    void SetAttackSpeed(float speed)
+    {
+        enemyAnimator.SetFloat("attackSpeed", speed);
     }
 }
