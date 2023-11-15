@@ -15,7 +15,7 @@ public class CameraMovement : MonoBehaviour
     private Vector3                     cameraPosition;
 
     [SerializeField]
-    private Vector2                     center;
+    public Vector2                      center;
 
     [SerializeField]
     public Vector2                      mapSize;
@@ -23,7 +23,7 @@ public class CameraMovement : MonoBehaviour
     [SerializeField]
     private float                       cameraMoveSpeed;
     private float                       height;
-    private float                       width;
+    public float                        width;
 
     void Awake()
     {
