@@ -5,19 +5,37 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 public class CameraMovement : MonoBehaviour
 {
+    public static CameraMovement instance;
+
+    //직렬화
+    //public으로 선언하지 않아도 유니티 inspector 창에서 변수값 대입을 가능하게함
     [SerializeField]
-    Transform       playerTransform;
+    private Transform                   playerTransform;
     [SerializeField]
-    Vector3         cameraPosition;
+    private Vector3                     cameraPosition;
 
     [SerializeField]
-    Vector2         center;
+    private Vector2                     center;
+
     [SerializeField]
-    Vector2         mapSize;
+    public Vector2                      mapSize;
+
     [SerializeField]
-    float           cameraMoveSpeed;
-    float           height;
-    float           width;
+    private float                       cameraMoveSpeed;
+    private float                       height;
+    private float                       width;
+
+    void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     void Start()
     {
