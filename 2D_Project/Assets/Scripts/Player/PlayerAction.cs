@@ -35,7 +35,7 @@ public class PlayerAction : MonoBehaviour
         PlayerName = gameObject.name;
         if(PlayerName == "Archer")
         {
-            attackDelay = 0.7f;
+            attackDelay = 1f;
         }else if(PlayerName == "Wizard")
         {
             attackDelay = 0.5f;
@@ -221,19 +221,22 @@ public class PlayerAction : MonoBehaviour
     private void Attack()
     {
         if (isGround)
-            if (Input.GetKeyDown(KeyCode.X) && AttackTime == 0f)
+            if (isCrouch == false)
             {
-                if (PlayerName == "Archer")
+                if (Input.GetKeyDown(KeyCode.X) && AttackTime == 0f)
                 {
-                    StartCoroutine(AtcherAttack());
-                }
-                else if (PlayerName == "Wizard")
-                {
-                    StartCoroutine(WizardAttack());
-                }
-                else
-                {
-                    StartCoroutine(WarriorAttack());
+                    if (PlayerName == "Archer")
+                    {
+                        StartCoroutine(AtcherAttack());
+                    }
+                    else if (PlayerName == "Wizard")
+                    {
+                        StartCoroutine(WizardAttack());
+                    }
+                    else
+                    {
+                        StartCoroutine(WarriorAttack());
+                    }
                 }
             }
     }
@@ -241,7 +244,7 @@ public class PlayerAction : MonoBehaviour
     {
         animator.SetBool("Attack", true);
         isAttack = true;
-        yield return new WaitForSeconds(0.7f);
+        yield return new WaitForSeconds(0.55f);
         var bulletGo = Instantiate<GameObject>(this.aObject);
         bulletGo.transform.position = this.transform.position;
         yield break;
