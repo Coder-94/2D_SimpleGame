@@ -4,25 +4,27 @@ using UnityEngine;
 
 public class PlayerAction : MonoBehaviour
 {
-    //±âº» »çÇ×
+    //ï¿½âº» ï¿½ï¿½ï¿½ï¿½
     private Animator animator;
     private Rigidbody2D rb;
     public GameObject Player;
-    //¶¥¿¡ ´ê´ÂÁö È®ÀÎÇÏ´Â ÀÎ¼ö
+    //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Î¼ï¿½
     public bool isGround = false;
-    //±âÁ¸ À§Ä¡ È®ÀÎ ÀÎ¼ö
+    public string PlayerName = "";
+    //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ È®ï¿½ï¿½ ï¿½Î¼ï¿½
     public Vector3 before = new Vector3(0, 0, 0);
-    //JumpÀÎÀÚ
+    //Jumpï¿½ï¿½ï¿½ï¿½
     public float jumpForce = 5f;
     public bool isJump = false;
-    //Move ÀÎÀÚ
+    //Move ï¿½ï¿½ï¿½ï¿½
     public float moveSpeed = 5f;
-    //Crouch ÀÎÀÚ
+    //Crouch ï¿½ï¿½ï¿½ï¿½
     public bool isCrouch = false;
-    //Attack ÀÎÀÚ
+    //Attack ï¿½ï¿½ï¿½ï¿½
     public GameObject aObject;
     public bool isAttack = false;
     public float AttackTime = 0f;
+    public float attackDelay = 3f;
     public static Vector3 AttackPosistion = Vector3.right;
     public Vector3 movePosisiton;
 
@@ -30,10 +32,23 @@ public class PlayerAction : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
-        
+        PlayerName = gameObject.name;
+        if(PlayerName == "Archer")
+        {
+            attackDelay = 0.7f;
+        }else if(PlayerName == "Wizard")
+        {
+            attackDelay = 0.5f;
+        }
+        else
+        {
+            attackDelay = 0.7f;
+        }
+
     }
     private void Update()
     {
+        Debug.Log(PlayerName);
         before = transform.position;
         if (before == transform.position)
         {
@@ -46,9 +61,7 @@ public class PlayerAction : MonoBehaviour
         if (isAttack == true)
         {
             AttackTime += Time.deltaTime;
-            if (Player.name == "Archer")
-            {
-                if (AttackTime >= 1f)
+                if (AttackTime >= attackDelay)
                 {
                     isAttack = false;
                     animator.SetBool("Attack", false);
@@ -56,7 +69,7 @@ public class PlayerAction : MonoBehaviour
                 }
             }
         }
-     }
+    
 
 
 
@@ -152,7 +165,7 @@ public class PlayerAction : MonoBehaviour
             {
                 rb.velocity = new Vector2(rb.velocity.x, jumpForce);
                 animator.SetBool("Jump", true);
-                isJump= true;
+                isJump = true;
                 if (isCrouch)
                 {
                     isCrouch = false;
@@ -167,10 +180,32 @@ public class PlayerAction : MonoBehaviour
         if (isGround)
             if (Input.GetKeyDown(KeyCode.X) && AttackTime == 0f)
             {
-                animator.SetBool("Attack", true);
-                var bulletGo = Instantiate<GameObject>(this.aObject);
-                bulletGo.transform.position = this.transform.position;
-                isAttack = true;
+                if (PlayerName == "Archer")
+                {
+                    StartCoroutine(AtcherAttack());
+                }
+                else if (PlayerName == "Wizard")
+                {
+                    StartCoroutine(WizardAttack());
+                }
             }
+    }
+    IEnumerator AtcherAttack()
+    {
+        animator.SetBool("Attack", true);
+        isAttack = true;
+        yield return new WaitForSeconds(0.7f);
+        var bulletGo = Instantiate<GameObject>(this.aObject);
+        bulletGo.transform.position = this.transform.position;
+        yield break;
+    }
+    IEnumerator WizardAttack()
+    {
+        animator.SetBool("Attack", true);
+        isAttack = true;
+        yield return new WaitForSeconds(0.2f);
+        var bulletGo = Instantiate<GameObject>(this.aObject);
+        bulletGo.transform.position = this.transform.position;
+        yield break;
     }
 }

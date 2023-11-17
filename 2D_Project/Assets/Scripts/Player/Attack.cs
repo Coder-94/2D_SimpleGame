@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class Attack : MonoBehaviour
 {
-    //°ø°Ý
+    //ï¿½ï¿½ï¿½ï¿½
     public float AttackSpeed = 3f;
-    //°ø°Ý ¹æÇâ
+    //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public Vector3 Direction;
     Rigidbody2D rb;
+    public float DestroyTime = 0f;
 
     private void Start()
     {
@@ -29,6 +30,12 @@ public class Attack : MonoBehaviour
     void Update()
     {
         this.transform.Translate(Direction * this.AttackSpeed * Time.deltaTime);
+        DestroyTime += Time.deltaTime;
+        if (DestroyTime >= 3f)
+        {
+            Debug.Log("Disapper");
+            Destroy(this.gameObject);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
