@@ -42,13 +42,12 @@ public class PlayerAction : MonoBehaviour
         }
         else
         {
-            attackDelay = 0.7f;
+            attackDelay = 0.3f;
         }
 
     }
     private void Update()
     {
-        Debug.Log(PlayerName);
         before = transform.position;
         if (before == transform.position)
         {
@@ -61,14 +60,15 @@ public class PlayerAction : MonoBehaviour
         if (isAttack == true)
         {
             AttackTime += Time.deltaTime;
-                if (AttackTime >= attackDelay)
-                {
-                    isAttack = false;
-                    animator.SetBool("Attack", false);
-                    AttackTime = 0f;
-                }
+            if (AttackTime >= attackDelay)
+            {
+                isAttack = false;
+                animator.SetBool("Attack", false);
+                AttackTime = 0f;
             }
+
         }
+    }
     
 
 
@@ -105,40 +105,83 @@ public class PlayerAction : MonoBehaviour
     private void Move()
     {
         movePosisiton = Vector3.zero;
-
-        if (isCrouch == false && isAttack == false)
+        if (PlayerName != "Warrior")
         {
-            if (Input.GetAxisRaw("Horizontal") < 0)
+            if (isCrouch == false && isAttack == false)
             {
-                movePosisiton = Vector3.left;
-                AttackPosistion = Vector3.left;
-                transform.localScale = new Vector3(-1, 1, 1);
-                if (isGround)
+                if (Input.GetAxisRaw("Horizontal") < 0)
                 {
-                    animator.SetInteger("walk", 1);
+                    movePosisiton = Vector3.left;
+                    AttackPosistion = Vector3.left;
+                    transform.localScale = new Vector3(-1, 1, 1);
+                    if (isGround)
+                    {
+                        animator.SetInteger("walk", 1);
+                    }
+                    else
+                    {
+                        animator.SetInteger("walk", 0);
+
+                    }
                 }
-                else
+                else if (Input.GetAxisRaw("Horizontal") > 0)
+                {
+                    movePosisiton = Vector3.right;
+                    AttackPosistion = Vector3.right;
+                    transform.localScale = new Vector3(1, 1, 1);
+                    if (isGround)
+                    {
+                        animator.SetInteger("walk", 1);
+                    }
+                    else
+                    {
+                        animator.SetInteger("walk", 0);
+                    }
+                }
+                transform.position += movePosisiton * moveSpeed * Time.deltaTime;
+            }
+        }
+        else
+        {
+            if (isCrouch == false)
+            {
+                if (Input.GetAxisRaw("Horizontal") < 0)
+                {
+                    movePosisiton = Vector3.left;
+                    AttackPosistion = Vector3.left;
+                    transform.localScale = new Vector3(-1, 1, 1);
+                    if (isGround)
+                    {
+                        animator.SetInteger("walk", 1);
+                    }
+                    else
+                    {
+                        animator.SetInteger("walk", 0);
+
+                    }
+                }
+                else if (Input.GetAxisRaw("Horizontal") > 0)
+                {
+                    movePosisiton = Vector3.right;
+                    AttackPosistion = Vector3.right;
+                    transform.localScale = new Vector3(1, 1, 1);
+                    if (isGround)
+                    {
+                        animator.SetInteger("walk", 1);
+                    }
+                    else
+                    {
+                        animator.SetInteger("walk", 0);
+                    }
+                }
+                if(isAttack == true)
                 {
                     animator.SetInteger("walk", 0);
-
+                    moveSpeed = 3f;
                 }
+                transform.position += movePosisiton * moveSpeed * Time.deltaTime;
+                moveSpeed = 5f;
             }
-            else if (Input.GetAxisRaw("Horizontal") > 0)
-            {
-                movePosisiton = Vector3.right;
-                AttackPosistion = Vector3.right;
-                transform.localScale = new Vector3(1, 1, 1);
-                if (isGround)
-                {
-                    animator.SetInteger("walk", 1);
-                }
-                else
-                {
-                    animator.SetInteger("walk", 0);
-                }
-            }
-            transform.position += movePosisiton * moveSpeed * Time.deltaTime;
-
         }
     }
     private void Crouch()
@@ -188,6 +231,10 @@ public class PlayerAction : MonoBehaviour
                 {
                     StartCoroutine(WizardAttack());
                 }
+                else
+                {
+                    StartCoroutine(WarriorAttack());
+                }
             }
     }
     IEnumerator AtcherAttack()
@@ -206,6 +253,15 @@ public class PlayerAction : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         var bulletGo = Instantiate<GameObject>(this.aObject);
         bulletGo.transform.position = this.transform.position;
+        yield break;
+    }
+    IEnumerator WarriorAttack()
+    {
+        animator.SetBool("Attack", true);
+        aObject.SetActive(true);
+        isAttack = true;
+        yield return new WaitForSeconds(0.3f);
+        aObject.SetActive(false);
         yield break;
     }
 }

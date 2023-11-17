@@ -11,10 +11,10 @@ public class PlayerMove : MonoBehaviour
     public RaycastHit2D hit;
     public Vector3 Grounded;
     public static Vector3 movePosisiton;
-    //Move ÇÔ¼ö
+    //Move ï¿½Ô¼ï¿½
     public float moveSpeed = 1f;
     public Vector3 BeforePo = new Vector3(0,0,0);
-    //Jump ÇÔ¼ö
+    //Jump ï¿½Ô¼ï¿½
     public float jumpForce = 5f;
     public bool isJumped = false;
 
