@@ -48,7 +48,7 @@ public class Enemy : MonoBehaviour
         target = GameObject.FindWithTag("Archer").transform;
         SetAttackSpeed(atkSpeed);
 
-        InvokeRepeating("Think", 5, 3);
+        StartCoroutine(ThinkRoutine());
     }
 
     void Awake()
@@ -58,7 +58,24 @@ public class Enemy : MonoBehaviour
         enemyAnimator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        CancelInvoke();
+    }
+
+    IEnumerator ThinkRoutine()
+    {
+        while (true)
+        {
+            nextMove = Random.Range(-1, 2);
+
+            enemyAnimator.SetInteger("WalkSpeed", nextMove);
+
+            if (nextMove != 0)
+            {
+                spriteRenderer.flipX = nextMove == 1;
+            }
+
+            float nextThinkTime = Random.Range(2f, 5f);
+            yield return new WaitForSeconds(nextThinkTime);
+        }
     }
 
     void FixedUpdate()
@@ -76,29 +93,12 @@ public class Enemy : MonoBehaviour
         }
      }
 
-    void Think()
-    {
-        nextMove = Random.Range(-1, 2);
-
-        enemyAnimator.SetInteger("WalkSpeed", nextMove);
-
-        if (nextMove != 0)
-        {
-            spriteRenderer.flipX = nextMove == 1;
-        }
-
-        float nextThinkTime = Random.Range(2f, 5f);
-
-        Invoke("Think", nextThinkTime);
-    }
 
     void Turn()
     {
         nextMove = nextMove *= -1;
         spriteRenderer.flipX = (nextMove == 1);
 
-        CancelInvoke();
-        Invoke("Think", 5);
     }
     void Die()
     {
