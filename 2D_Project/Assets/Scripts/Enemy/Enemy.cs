@@ -64,13 +64,25 @@ public class Enemy : MonoBehaviour
     {
         while (true)
         {
-            nextMove = Random.Range(-1, 2);
-
-            enemyAnimator.SetInteger("WalkSpeed", nextMove);
-
-            if (nextMove != 0)
+            if (target != null)
             {
-                spriteRenderer.flipX = nextMove == 1;
+                if (Mathf.Approximately(target.GetComponent<Rigidbody2D>().velocity.x, 0f))
+                {
+                    // 플레이어가 움직이지 않을 때, 적도 정지하게 만듭니다.
+                    nextMove = 0;
+                }
+                else
+                {
+                    // 플레이어가 움직일 때, 적에게 무작위 움직임을 생성합니다.
+                    nextMove = Random.Range(-1, 2);
+                }
+
+                enemyAnimator.SetInteger("WalkSpeed", nextMove);
+
+                if (nextMove != 0)
+                {
+                    spriteRenderer.flipX = nextMove == 1;
+                }
             }
 
             float nextThinkTime = Random.Range(2f, 5f);
@@ -192,8 +204,21 @@ public class Enemy : MonoBehaviour
     {
         //target.GetComponent<TemporaryFile>().nowHp -= enemy.atkDmg;
         enemyAnimator.SetTrigger("attack"); 
-        attackDelay = enemy.atkSpeed; 
+        attackDelay = enemy.atkSpeed;
+
+        float dir = target.position.x - transform.position.x;
+        dir = (dir < 0) ? -1 : 1;
+        if (target.position.x - transform.position.x < 0)
+        {
+            spriteRenderer.flipX = (dir < 0);
+        }
+        else
+        {
+            spriteRenderer.flipX = (dir == 1);
+        }
     }
+
+
 
     void SetAttackSpeed(float speed)
     {
