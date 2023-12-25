@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 public class Enemy : MonoBehaviour
 {
-
     Rigidbody2D rigid;
     Animator enemyAnimator;
     SpriteRenderer spriteRenderer;
@@ -25,8 +24,9 @@ public class Enemy : MonoBehaviour
     float attackDelay;
     Enemy enemy;
 
+    //Enemy 속성 설정
     private void SetEnemyStatus(string _enemyName, int _maxHP, int _atkDmg, float _atkSpeed, 
-       float _moveSpeed, float _atkRange, float _fieldOfVision)
+       float _moveSpeed, float _atkRange, float _fieldOfVision) 
     {
         enemyName = _enemyName;
         maxHp = _maxHP;
@@ -60,6 +60,7 @@ public class Enemy : MonoBehaviour
 
     }
 
+    //Enemy 무작위 이동 로직을 담은 코루틴
     IEnumerator ThinkRoutine()
     {
         while (true)
@@ -68,12 +69,10 @@ public class Enemy : MonoBehaviour
             {
                 if (Mathf.Approximately(target.GetComponent<Rigidbody2D>().velocity.x, 0f))
                 {
-                    // 플레이어가 움직이지 않을 때, 적도 정지하게 만듭니다.
                     nextMove = 0;
                 }
                 else
                 {
-                    // 플레이어가 움직일 때, 적에게 무작위 움직임을 생성합니다.
                     nextMove = Random.Range(-1, 2);
                 }
 
@@ -90,6 +89,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    //Enemy 이동 & Raycast 체크
     void FixedUpdate()
      {
          rigid.velocity = new Vector2(nextMove, rigid.velocity.y);
@@ -105,13 +105,14 @@ public class Enemy : MonoBehaviour
         }
      }
 
-
+    //Enemy 방향 전환
     void Turn()
     {
         nextMove = nextMove *= -1;
         spriteRenderer.flipX = (nextMove == 1);
 
     }
+
     void Die()
     {
         enemyAnimator.SetTrigger("die");           
@@ -121,6 +122,7 @@ public class Enemy : MonoBehaviour
         Destroy(gameObject, 3);                   
     }
 
+    //Player에게 부딪혔을 때
     private void OnTriggerEnter2D(Collider2D col)
     {
         if(col.CompareTag("Player"))
@@ -167,6 +169,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    //Player 바라보기
     void FaceTarget()
     {
         Vector3 targetDirection = target.position - transform.position;
@@ -183,6 +186,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    //Player를 향해 이동
     void MoveToTarget()
     {
         float dir = target.position.x - transform.position.x;
@@ -200,9 +204,9 @@ public class Enemy : MonoBehaviour
         enemyAnimator.SetInteger("WalkSpeed", (int)dir);
     }
 
+    //Player 공격
     void AttackTarget()
     {
-        //target.GetComponent<TemporaryFile>().nowHp -= enemy.atkDmg;
         enemyAnimator.SetTrigger("attack"); 
         attackDelay = enemy.atkSpeed;
 
@@ -218,8 +222,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-
-
+    //공격 속도 설정
     void SetAttackSpeed(float speed)
     {
         enemyAnimator.SetFloat("attackSpeed", speed);
