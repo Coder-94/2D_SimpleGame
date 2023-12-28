@@ -75,7 +75,7 @@ public class Enemy : MonoBehaviour
     }
 
     //Enemy 이동 & Raycast 체크
-    protected void FixedUpdate()
+  /*  protected void FixedUpdate()
     {
         rigid.velocity = new Vector2(nextMove, rigid.velocity.y);
 
@@ -95,7 +95,7 @@ public class Enemy : MonoBehaviour
     {
         nextMove = nextMove *= -1;
         spriteRenderer.flipX = (nextMove == 1);
-    }
+    }*/
 
 
     //Player에게 부딪혔을 때
