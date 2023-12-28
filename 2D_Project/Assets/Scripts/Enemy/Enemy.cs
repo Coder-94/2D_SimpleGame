@@ -4,8 +4,8 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     public Rigidbody2D rigid;
-    public Animator enemyAnimator;
-    public SpriteRenderer spriteRenderer;
+    protected Animator enemyAnimator;
+    protected SpriteRenderer spriteRenderer;
     public int nextMove;
 
     public string enemyName;
@@ -21,8 +21,10 @@ public class Enemy : MonoBehaviour
     public TemporaryFile player;
 
     public Transform target;
-    float attackDelay;
-    Enemy enemy;
+    protected float attackDelay;
+    protected Enemy enemy;
+
+    Vector3 currentScale;
 
     //Enemy 속성 설정
     protected void SetEnemyStatus(string _enemyName, int _maxHP, int _atkDmg, float _atkSpeed, 
@@ -45,6 +47,9 @@ public class Enemy : MonoBehaviour
             SetEnemyStatus("Enemy", 100, 10, 1.5f, 2, 1.5f, 7f);
         }
 
+        currentScale = transform.localScale;
+
+        target = GameObject.FindWithTag("Archer").transform;
         SetAttackSpeed(atkSpeed);
 
         StartCoroutine(ThinkRoutine());
@@ -70,7 +75,7 @@ public class Enemy : MonoBehaviour
         }
     }
     //Enemy 이동 & Raycast 체크
-    void FixedUpdate()
+    protected void FixedUpdate()
      {
          rigid.velocity = new Vector2(nextMove, rigid.velocity.y);
 
@@ -92,19 +97,11 @@ public class Enemy : MonoBehaviour
         spriteRenderer.flipX = (nextMove == 1);
     }
 
-    void Die()
-    {
-        enemyAnimator.SetTrigger("die");           
-        GetComponent<Enemy>().enabled = false;    
-        GetComponent<Collider2D>().enabled = false; 
-        Destroy(GetComponent<Rigidbody2D>());  
-        Destroy(gameObject, 3);                   
-    }
 
     //Player에게 부딪혔을 때
     protected void OnTriggerEnter2D(Collider2D col)
     {
-        if(col.CompareTag("Player"))
+        if(col.CompareTag("Archer"))
         {
             if(player.attacked)
             {
@@ -149,7 +146,7 @@ public class Enemy : MonoBehaviour
     }
 
     //Player 바라보기
-    void FaceTarget()
+    protected  void FaceTarget()
     {
         Vector3 targetDirection = target.position - transform.position;
 
@@ -157,11 +154,11 @@ public class Enemy : MonoBehaviour
 
         if (target.position.x - transform.position.x < 0) // 타겟이 왼쪽에 있을 때
         {
-            transform.localScale = new Vector3(-1, 1, 1);
+            transform.localScale = new Vector3(-currentScale.x, currentScale.y, 1);
         }
         else // 타겟이 오른쪽에 있을 때
         {
-            transform.localScale = new Vector3(1, 1, 1);
+            transform.localScale = new Vector3(currentScale.x, currentScale.y, 1);
         }
     }
 
@@ -170,8 +167,6 @@ public class Enemy : MonoBehaviour
     {
         float dir = target.position.x - transform.position.x;
         dir = (dir < 0) ? -1 : 1;
-
-
 
         spriteRenderer.flipX = (dir < 0);
         if (target.position.x - transform.position.x < 0)
@@ -198,11 +193,11 @@ public class Enemy : MonoBehaviour
         dir = (dir < 0) ? -1 : 1;
         if (target.position.x - transform.position.x < 0)
         {
-            spriteRenderer.flipX = (dir < 0);
+            transform.localScale = new Vector3(-currentScale.x, currentScale.y, 1);
         }
         else
         {
-            spriteRenderer.flipX = (dir == 1);
+            transform.localScale = new Vector3(currentScale.x, currentScale.y, 1);
         }
     }
 
@@ -212,5 +207,26 @@ public class Enemy : MonoBehaviour
         enemyAnimator.SetFloat("attackSpeed", speed);
     }
 
+    void Die()
+    {
+        //모든 실행중인 코루틴을 종료
+        StopAllCoroutines();
+        //죽는 코루틴 실행
+        StartCoroutine(DieProcess());
+
+        // 죽은 상태 처리하기 위한 코루틴
+        IEnumerator DieProcess()
+        {
+            //일정 시간 대기 후 몬스터 제거
+            yield return new WaitForSeconds(2f);
+            Destroy(gameObject, 5f);
+        }
+        //enemyAnimator.SetTrigger("die");           
+        //GetComponent<Enemy>().enabled = false;    
+        //GetComponent<Collider2D>().enabled = false; 
+        //Destroy(GetComponent<Rigidbody2D>());
+        //Destroy(gameObject, 3);
+
+    }
 
 }
