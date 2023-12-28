@@ -151,17 +151,8 @@ public class Enemy : MonoBehaviour
         float dir = target.position.x - transform.position.x;
         dir = (dir < 0) ? -1 : 1;
 
-        spriteRenderer.flipX = (dir < 0);
+        spriteRenderer.flipX = (dir > 0);
 
-        if (target.position.x - transform.position.x < 0) // 타겟이 왼쪽에 있을 때
-        {
-            spriteRenderer.flipX = (dir < 0);
-            //transform.localScale = new Vector3(currentScale.x, currentScale.y, 1);
-        }
-        else // 타겟이 오른쪽에 있을 때
-        {
-            transform.localScale = new Vector3(-currentScale.x, currentScale.y, 1);
-        }
     }
 
     //Player를 향해 이동
@@ -169,18 +160,6 @@ public class Enemy : MonoBehaviour
     {
         float dir = target.position.x - transform.position.x;
         dir = (dir < 0) ? -1 : 1;
-
-        spriteRenderer.flipX = (dir < 0);
-        if (target.position.x - transform.position.x < 0)
-        {
-            spriteRenderer.flipX = (dir < 0);
-            //transform.localScale = new Vector3(currentScale.x, currentScale.y, 1);
-        }
-        else
-        {
-            transform.localScale = new Vector3(-currentScale.x, currentScale.y, 1);
-        }
-
 
         transform.Translate(new Vector2(dir, 0) * enemy.moveSpeed * Time.deltaTime);
         enemyAnimator.SetInteger("WalkSpeed", (int)dir);
@@ -194,16 +173,9 @@ public class Enemy : MonoBehaviour
 
         float dir = target.position.x - transform.position.x;
         dir = (dir < 0) ? -1 : 1;
-        if (target.position.x - transform.position.x < 0)
-        {
-            spriteRenderer.flipX = (dir < 0);
-            //transform.localScale = new Vector3(-currentScale.x, currentScale.y, 1);
-        }
-        else
-        {
-            spriteRenderer.flipX = (dir == 1);
-            //transform.localScale = new Vector3(currentScale.x, currentScale.y, 1);
-        }
+
+        spriteRenderer.flipX = (dir < 0);
+
     }
 
     //공격 속도 설정
@@ -226,11 +198,6 @@ public class Enemy : MonoBehaviour
             yield return new WaitForSeconds(2f);
             Destroy(gameObject, 5f);
         }
-        //enemyAnimator.SetTrigger("die");           
-        //GetComponent<Enemy>().enabled = false;    
-        //GetComponent<Collider2D>().enabled = false; 
-        //Destroy(GetComponent<Rigidbody2D>());
-        //Destroy(gameObject, 3);
 
     }
 
