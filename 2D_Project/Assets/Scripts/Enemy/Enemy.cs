@@ -171,6 +171,8 @@ public class Enemy : MonoBehaviour
         float dir = target.position.x - transform.position.x;
         dir = (dir < 0) ? -1 : 1;
 
+
+
         spriteRenderer.flipX = (dir < 0);
         if (target.position.x - transform.position.x < 0)
         {
