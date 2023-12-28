@@ -45,7 +45,6 @@ public class Enemy : MonoBehaviour
             SetEnemyStatus("Enemy", 100, 10, 1.5f, 2, 1.5f, 7f);
         }
 
-        target = GameObject.FindWithTag("Archer").transform;
         SetAttackSpeed(atkSpeed);
 
         StartCoroutine(ThinkRoutine());
@@ -58,6 +57,7 @@ public class Enemy : MonoBehaviour
         enemyAnimator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
+        target = GameObject.FindWithTag("Archer").transform;
     }
 
     //Enemy 무작위 이동 로직을 담은 코루틴
@@ -65,30 +65,10 @@ public class Enemy : MonoBehaviour
     {
         while (true)
         {
-            if (target != null)
-            {
-                if (Mathf.Approximately(target.GetComponent<Rigidbody2D>().velocity.x, 0f))
-                {
-                    nextMove = 0;
-                }
-                else
-                {
-                    nextMove = Random.Range(-1, 2);
-                }
-
-                enemyAnimator.SetInteger("WalkSpeed", nextMove);
-
-                if (nextMove != 0)
-                {
-                    spriteRenderer.flipX = nextMove == 1;
-                }
-            }
-
-            float nextThinkTime = Random.Range(2f, 5f);
-            yield return new WaitForSeconds(nextThinkTime);
+            MoveToTarget();
+            yield return null;
         }
     }
-
     //Enemy 이동 & Raycast 체크
     void FixedUpdate()
      {
@@ -110,7 +90,6 @@ public class Enemy : MonoBehaviour
     {
         nextMove = nextMove *= -1;
         spriteRenderer.flipX = (nextMove == 1);
-
     }
 
     void Die()
@@ -192,17 +171,20 @@ public class Enemy : MonoBehaviour
         float dir = target.position.x - transform.position.x;
         dir = (dir < 0) ? -1 : 1;
 
+        spriteRenderer.flipX = (dir < 0);
         if (target.position.x - transform.position.x < 0)
         {
             spriteRenderer.flipX = (dir < 0);
-        } else
+        }
+        else
         {
             spriteRenderer.flipX = (dir == 1);
         }
 
+
         transform.Translate(new Vector2(dir, 0) * enemy.moveSpeed * Time.deltaTime);
-        enemyAnimator.SetInteger("WalkSpeed", (int)dir);
-    }
+            enemyAnimator.SetInteger("WalkSpeed", (int)dir);
+      }
 
     //Player 공격
     void AttackTarget()
@@ -227,4 +209,6 @@ public class Enemy : MonoBehaviour
     {
         enemyAnimator.SetFloat("attackSpeed", speed);
     }
+
+
 }
