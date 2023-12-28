@@ -8,11 +8,6 @@ public class Slime : Enemy
     // Start is called before the first frame update
     protected override void Start()
     {
-        if (name.Equals("Slime"))
-        {
-            // 슬라임에 대한 속성 설정
-            SetEnemyStatus("Slime", 100, 10, 1.5f, 1, 1.5f, 7f);
-        }
 
         base.Start();
 
