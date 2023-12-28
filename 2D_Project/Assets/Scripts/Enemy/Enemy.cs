@@ -26,15 +26,32 @@ public class Enemy : MonoBehaviour
 
     Vector3 currentScale;
 
+    protected void SetEnemyStatus(string _enemyName, int _maxHP, int _atkDmg, float _atkSpeed,
+      float _moveSpeed, float _atkRange, float _fieldOfVision)
+    {
+        enemyName = _enemyName;
+        maxHp = _maxHP;
+        nowHp = _maxHP;
+        atkDmg = _atkDmg;
+        atkSpeed = _atkSpeed;
+        moveSpeed = _moveSpeed;
+        atkRange = _atkRange;
+        fieldOfVision = _fieldOfVision;
+    }
 
     protected virtual void Start()
     {
+        if (name.Equals("Enemy"))
+        {
+            SetEnemyStatus("Enemy", 100, 10, 1.5f, 2, 1.5f, 7f);
+        }
+
+        currentScale = transform.localScale;
 
         target = GameObject.FindWithTag("Archer").transform;
         SetAttackSpeed(atkSpeed);
 
-        currentScale = transform.localScale;
-
+        StartCoroutine(ThinkRoutine());
 
     }
 
@@ -48,20 +65,29 @@ public class Enemy : MonoBehaviour
         target = GameObject.FindWithTag("Archer").transform;
     }
 
+    IEnumerator ThinkRoutine()
+    {
+        while (true)
+        {
+            MoveToTarget();
+            yield return null;
+        }
+    }
+
     //Enemy 이동 & Raycast 체크
     protected void FixedUpdate()
     {
-         rigid.velocity = new Vector2(nextMove, rigid.velocity.y);
+        rigid.velocity = new Vector2(nextMove, rigid.velocity.y);
 
-         Vector2 frontVec = new Vector2(rigid.position.x + nextMove*0.2f, rigid.position.y);
-         Debug.DrawRay(frontVec, Vector3.down, new Color(0, 1, 0));
+        Vector2 frontVec = new Vector2(rigid.position.x + nextMove * 0.2f, rigid.position.y);
+        Debug.DrawRay(frontVec, Vector3.down, new Color(0, 1, 0));
 
-         RaycastHit2D rayHit = Physics2D.Raycast(frontVec, Vector3.down, 1, LayerMask.GetMask("Platform"));
+        RaycastHit2D rayHit = Physics2D.Raycast(frontVec, Vector3.down, 1, LayerMask.GetMask("Platform"));
 
-         if (rayHit.collider == null)
-         {
+        if (rayHit.collider == null)
+        {
             Turn();
-         }
+        }
     }
 
     //Enemy 방향 전환
@@ -75,13 +101,13 @@ public class Enemy : MonoBehaviour
     //Player에게 부딪혔을 때
     protected void OnTriggerEnter2D(Collider2D col)
     {
-        if(col.CompareTag("Archer"))
+        if (col.CompareTag("Archer"))
         {
-            if(player.attacked)
+            if (player.attacked)
             {
                 nowHp -= player.atkDmg;
                 player.attacked = false;
-                if(nowHp<=0)
+                if (nowHp <= 0)
                 {
                     Die();
                 }
@@ -96,7 +122,7 @@ public class Enemy : MonoBehaviour
 
         float distance = Vector3.Distance(transform.position, target.position);
 
-        if (attackDelay == 0)
+        if (attackDelay == 0 && distance <= enemy.fieldOfVision)
         {
             FaceTarget();
 
@@ -106,7 +132,7 @@ public class Enemy : MonoBehaviour
             }
             else
             {
-                if (!enemyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Attack")) 
+                if (!enemyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
                 {
                     MoveToTarget();
                 }
@@ -120,15 +146,17 @@ public class Enemy : MonoBehaviour
     }
 
     //Player 바라보기
-    protected  void FaceTarget()
+    protected virtual void FaceTarget()
     {
-        Vector3 targetDirection = target.position - transform.position;
-        
-        spriteRenderer.flipX = (targetDirection.x < 0);
+        float dir = target.position.x - transform.position.x;
+        dir = (dir < 0) ? -1 : 1;
 
-        if (targetDirection.x < 0) // 타겟이 왼쪽에 있을 때
+        spriteRenderer.flipX = (dir < 0);
+
+        if (target.position.x - transform.position.x < 0) // 타겟이 왼쪽에 있을 때
         {
-            transform.localScale = new Vector3(currentScale.x, currentScale.y, 1);
+            spriteRenderer.flipX = (dir < 0);
+            //transform.localScale = new Vector3(currentScale.x, currentScale.y, 1);
         }
         else // 타겟이 오른쪽에 있을 때
         {
@@ -143,39 +171,38 @@ public class Enemy : MonoBehaviour
         dir = (dir < 0) ? -1 : 1;
 
         spriteRenderer.flipX = (dir < 0);
-        if (dir < 0)
+        if (target.position.x - transform.position.x < 0)
         {
-            Debug.Log("왼쪽에있음");
-            transform.localScale = new Vector3(currentScale.x, currentScale.y, 1);
+            spriteRenderer.flipX = (dir < 0);
+            //transform.localScale = new Vector3(currentScale.x, currentScale.y, 1);
         }
         else
         {
-            Debug.Log("오른쪽에있음");
             transform.localScale = new Vector3(-currentScale.x, currentScale.y, 1);
         }
 
 
         transform.Translate(new Vector2(dir, 0) * enemy.moveSpeed * Time.deltaTime);
-            enemyAnimator.SetInteger("WalkSpeed", (int)dir);
-      }
+        enemyAnimator.SetInteger("WalkSpeed", (int)dir);
+    }
 
     //Player 공격
     void AttackTarget()
     {
-        enemyAnimator.SetTrigger("attack"); 
+        enemyAnimator.SetTrigger("attack");
         attackDelay = enemy.atkSpeed;
 
         float dir = target.position.x - transform.position.x;
         dir = (dir < 0) ? -1 : 1;
-        if (dir < 0)
+        if (target.position.x - transform.position.x < 0)
         {
-            //spriteRenderer.flipX = (dir < 0);
-            transform.localScale = new Vector3(-currentScale.x, currentScale.y, 1);
+            spriteRenderer.flipX = (dir < 0);
+            //transform.localScale = new Vector3(-currentScale.x, currentScale.y, 1);
         }
         else
         {
-            //spriteRenderer.flipX = (dir == 1);
-            transform.localScale = new Vector3(currentScale.x, currentScale.y, 1);
+            spriteRenderer.flipX = (dir == 1);
+            //transform.localScale = new Vector3(currentScale.x, currentScale.y, 1);
         }
     }
 

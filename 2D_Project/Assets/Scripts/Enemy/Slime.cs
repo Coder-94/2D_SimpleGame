@@ -8,15 +8,20 @@ public class Slime : Enemy
     // Start is called before the first frame update
     protected override void Start()
     {
+        if (name.Equals("Slime"))
+        {
+            // 슬라임에 대한 속성 설정
+            SetEnemyStatus("Slime", 100, 10, 1.5f, 2, 1.5f, 7f);
+        }
 
         base.Start();
 
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
-        
+        base.Update();
     }
 
     protected override void MoveToTarget()
@@ -31,4 +36,5 @@ public class Slime : Enemy
         transform.Translate(new Vector2(dir, 0) * moveSpeed * Time.deltaTime);
         enemyAnimator.SetInteger("WalkSpeed", (int)dir);
     }
+
 }
