@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 public class Enemy : MonoBehaviour
 {
-    Rigidbody2D rigid;
-    Animator enemyAnimator;
-    SpriteRenderer spriteRenderer;
+    public Rigidbody2D rigid;
+    public Animator enemyAnimator;
+    public SpriteRenderer spriteRenderer;
     public int nextMove;
 
     public string enemyName;
@@ -25,7 +25,7 @@ public class Enemy : MonoBehaviour
     Enemy enemy;
 
     //Enemy 속성 설정
-    private void SetEnemyStatus(string _enemyName, int _maxHP, int _atkDmg, float _atkSpeed, 
+    protected void SetEnemyStatus(string _enemyName, int _maxHP, int _atkDmg, float _atkSpeed, 
        float _moveSpeed, float _atkRange, float _fieldOfVision) 
     {
         enemyName = _enemyName;
@@ -38,7 +38,7 @@ public class Enemy : MonoBehaviour
         fieldOfVision = _fieldOfVision;
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         if(name.Equals("Enemy"))
         {
@@ -102,7 +102,7 @@ public class Enemy : MonoBehaviour
     }
 
     //Player에게 부딪혔을 때
-    private void OnTriggerEnter2D(Collider2D col)
+    protected void OnTriggerEnter2D(Collider2D col)
     {
         if(col.CompareTag("Player"))
         {
@@ -118,7 +118,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void Update()
+    protected virtual void Update()
     {
         attackDelay -= Time.deltaTime;
         if (attackDelay < 0) attackDelay = 0;
@@ -166,7 +166,7 @@ public class Enemy : MonoBehaviour
     }
 
     //Player를 향해 이동
-    void MoveToTarget()
+    protected virtual void MoveToTarget()
     {
         float dir = target.position.x - transform.position.x;
         dir = (dir < 0) ? -1 : 1;
