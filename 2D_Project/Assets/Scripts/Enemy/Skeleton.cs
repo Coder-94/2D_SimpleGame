@@ -8,7 +8,7 @@ public class Skeleton : Enemy
     {
         if (name.Equals("Skeleton"))
         {
-            SetEnemyStatus("Skeleton", 100, 10, 1.5f, 2, 1.5f, 7f);
+            SetEnemyStatus("Skeleton", 1, 1, 0.5f, 1.5f, 7f);
         }
 
         base.Start();
@@ -26,7 +26,7 @@ public class Skeleton : Enemy
         float dir = target.position.x - transform.position.x;
         dir = (dir < 0) ? -1 : 1;
 
-        spriteRenderer.flipX = (dir < 0);
+        //spriteRenderer.flipX = (dir < 0);
         // 기존의 Enemy 클래스의 MoveToTarget 메서드 호출
         base.MoveToTarget();
 

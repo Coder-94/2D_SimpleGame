@@ -26,14 +26,14 @@ public class Enemy : MonoBehaviour
 
     Vector3 currentScale;
 
-    protected void SetEnemyStatus(string _enemyName, int _maxHP, int _atkDmg, float _atkSpeed,
+    protected void SetEnemyStatus(string _enemyName, int _maxHP, int _atkDmg,
       float _moveSpeed, float _atkRange, float _fieldOfVision)
     {
         enemyName = _enemyName;
         maxHp = _maxHP;
         nowHp = _maxHP;
         atkDmg = _atkDmg;
-        atkSpeed = _atkSpeed;
+        //atkSpeed = _atkSpeed;
         moveSpeed = _moveSpeed;
         atkRange = _atkRange;
         fieldOfVision = _fieldOfVision;
@@ -43,7 +43,7 @@ public class Enemy : MonoBehaviour
     {
         if (name.Equals("Enemy"))
         {
-            SetEnemyStatus("Enemy", 100, 10, 1.5f, 2, 1.5f, 7f);
+            SetEnemyStatus("Enemy", 100, 10, 2, 1.5f, 7f);
         }
 
         currentScale = transform.localScale;
@@ -169,7 +169,7 @@ public class Enemy : MonoBehaviour
     void AttackTarget()
     {
         enemyAnimator.SetTrigger("attack");
-        attackDelay = enemy.atkSpeed;
+        //attackDelay = enemy.atkSpeed;
 
         float dir = target.position.x - transform.position.x;
         dir = (dir < 0) ? -1 : 1;
@@ -181,7 +181,7 @@ public class Enemy : MonoBehaviour
     //공격 속도 설정
     void SetAttackSpeed(float speed)
     {
-        enemyAnimator.SetFloat("attackSpeed", speed);
+       // enemyAnimator.SetFloat("attackSpeed", speed);
     }
 
     void Die()

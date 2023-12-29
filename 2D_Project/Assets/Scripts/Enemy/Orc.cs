@@ -10,7 +10,7 @@ public class Orc : Enemy
         if (name.Equals("Orc"))
         {
             // 슬라임에 대한 속성 설정
-            SetEnemyStatus("Orc", 100, 10, 1.5f, 2, 1.5f, 7f);
+            SetEnemyStatus("Orc", 100, 10, 2, 1.5f, 7f);
         }
 
         base.Start();
@@ -28,7 +28,7 @@ public class Orc : Enemy
         float dir = target.position.x - transform.position.x;
         dir = (dir < 0) ? -1 : 1;
 
-        spriteRenderer.flipX = (dir < 0);
+        //spriteRenderer.flipX = (dir < 0);
         // 기존의 Enemy 클래스의 MoveToTarget 메서드 호출
         base.MoveToTarget();
 

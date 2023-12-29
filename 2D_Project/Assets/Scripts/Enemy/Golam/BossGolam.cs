@@ -21,7 +21,7 @@ public class BossGolam : Enemy
         if (name.Equals("BossGolam"))
         {
             // 슬라임에 대한 속성 설정
-            SetEnemyStatus("BossGolam", 100, 10, 1f, 1, 1.5f, 7f);
+            SetEnemyStatus("BossGolam", 100, 10, 1, 1.5f, 7f);
         }
 
         base.Start();
@@ -29,24 +29,24 @@ public class BossGolam : Enemy
 
     private void FixedUpdate()
     {
-        Vector2 frontVec = new Vector2(rigid.position.x + nextMove * 0.2f, rigid.position.y);
-        Debug.DrawRay(frontVec, Vector3.down, new Color(0, 1, 0));
-
-        //RaycastHit2D rayHit = Physics2D.Raycast(frontVec, Vector3.down, 1, LayerMask.GetMask("Platform"));
-
-        // 플레이어와의 거리가 공격 범위 내에 있는지 확인
-        if (target != null && Vector2.Distance(transform.position, target.position) <= enemy.atkRange)
+        RaycastHit2D raycast = Physics2D.Raycast(transform.position, transform.right * -1, distance, isLayer);
+        if (raycast.collider != null)
         {
-            // 쿨타임 체크
-            if (currenttime <= 0)
-            {
-                ThrowStone();
 
-                currenttime = cooltime;
+            if (Vector2.Distance(transform.position, raycast.collider.transform.position) < atkdistance)
+            {
+                if (currenttime <= 0)
+                {
+                    GameObject Stonecopy = Instantiate(Stone, pos.position, transform.rotation);
+
+                    currenttime = cooltime;
+                }
+            }
+            else
+            {
+                transform.position = Vector3.MoveTowards(transform.position, raycast.collider.transform.position, Time.deltaTime * speed);
             }
         }
-        // 쿨타임 감소
-        currenttime -= Time.fixedDeltaTime;
     }
 
     // Update is called once per frame
@@ -56,7 +56,7 @@ public class BossGolam : Enemy
 
     }
 
-    private void ThrowStone()
+/*    private void ThrowStone()
     {
         // 돌을 생성하고 던지기
         GameObject stoneCopy = Instantiate(Stone, pos.position, Quaternion.identity);
@@ -70,7 +70,7 @@ public class BossGolam : Enemy
             Vector2 direction = (target.position - pos.position).normalized;
             stoneRigidbody.velocity = direction * enemy.atkSpeed;
         }
-    }
+    }*/
 
 
 protected override void MoveToTarget()
